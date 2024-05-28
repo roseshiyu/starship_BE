@@ -8,6 +8,8 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 // api-user.local.starship.com
@@ -39,11 +41,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
-
+        $middleware->alias([
+            'ability' => CheckForAnyAbility::class,
+        ]);
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Domain::get();
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('v1/*')) {
                 return response()->json([
@@ -54,10 +58,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (QueryException $e, Request $request) {
             if ($request->is('v1/*')) {
                 return response()->json([
-                    'message' => 'Query Error.',
+                    'success' => false,
+                    'message' => $e->getMessage(),
                 ], 404);
             }
+        });
 
-            return $request->expectsJson();
+        $exceptions->render(function (ValidationException $e, Request $request) {
+            if ($request->is('v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'errors' => $e->errors(),
+                ], $e->status);
+            }
         });
     })->create();

@@ -123,7 +123,6 @@ class AppServiceProvider extends ServiceProvider
                 'success' => $success,
                 'message' => $message,
                 'errors' => $errors,
-                'statusCode' => $status_code,
             ], $status_code);
         });
 
