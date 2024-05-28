@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Domain\GetDomains;
 use App\Http\Requests\StoreDomainRequest;
 use App\Http\Requests\UpdateDomainRequest;
 use App\Models\Domain;
@@ -13,7 +14,9 @@ class DomainController extends Controller
      */
     public function index()
     {
-        //
+        $params = request()->all();
+
+        return response()->data(GetDomains::run($params));
     }
 
     /**
