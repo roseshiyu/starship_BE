@@ -17,6 +17,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/', 'index');
     });
 
+    Route::controller(Controllers\CourseController::class)->prefix('course')->group(function () {
+        Route::get('/', 'index');
+    });
+
     Route::middleware(['ability:api-student'])->group(function () {
 
     });
