@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('course_enrollments', function (Blueprint $table) {
+        Schema::create('student_course_enrollments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('teacher_id');
-            $table->unsignedInteger('class_id');
+            $table->unsignedInteger('student_id');
+            $table->unsignedInteger('course_id');
+            $table->string('entry_requirement_proof', 2048)->nullable();
+            $table->unsignedTinyInteger('status');
+            $table->unsignedInteger('admin_id');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('course_enrollments');
+        Schema::dropIfExists('student_course_enrollments');
     }
 };

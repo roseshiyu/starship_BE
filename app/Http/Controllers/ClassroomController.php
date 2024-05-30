@@ -4,31 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Actions\Course\CreateCourse;
 use App\Actions\Course\GetCourses;
-use App\Enums\Course\Category;
+use App\Enums\Course\Status;
 use App\Http\Requests\Course\CreateCourseRequest;
 use App\Http\Resources\Course\CourseResource;
 use App\Models\Course;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller
+class ClassroomController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function attendClass(CreateCourseRequest $request)
     {
-        $categories = Category::cases();
-        $data = [];
-        foreach ($categories as $category) {
-            $data[] = [
-                'id' => $category->value,
-                'name' => $category->name,
-            ];
-        }
-
-        return response()->data($data);
-        dd(1);
         $params = request()->all();
+
+        ClassroomAttendence::create([
+            'student_id' => $params['student_id'],
+            'class_id' => $params['class_id'],
+            'status' => Status::ontime,
+        ]);
 
         return response()->data(CourseResource::collection(GetCourses::run($params)));
     }
@@ -36,8 +31,12 @@ class CourseController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(CreateCourseRequest $request)
+    public function createClassQr(CreateCourseRequest $request)
     {
+        Classroom::create([
+
+        ]);
+
         return response()->data(CreateCourse::run($request->validated()));
     }
 
