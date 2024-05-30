@@ -2,6 +2,8 @@
 
 use App\Enums\Domain\Status;
 use App\Models\Domain;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -26,11 +28,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 Route::middleware('api')
                     ->domain(env('APP_SUBDOMAIN_API_USER').'.'.env('APP_ENV').'.'.env('APP_DOMAIN'))
                     ->prefix('v1')
+                    ->as('user.')
                     ->group(base_path('routes/'.$domain->name.'/api-user.php'));
 
                 Route::middleware('api')
                     ->domain(env('APP_SUBDOMAIN_API_ADMIN').'.'.env('APP_ENV').'.'.env('APP_DOMAIN'))
                     ->prefix('v1')
+                    ->as('admin.')
                     ->group(base_path('routes/'.$domain->name.'/api-admin.php'));
             }
         },
@@ -48,6 +52,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Domain::get();
+
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('v1/*')) {
                 return response()->json([
@@ -63,7 +68,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 404);
             }
         });
-
         $exceptions->render(function (ValidationException $e, Request $request) {
             if ($request->is('v1/*')) {
                 return response()->json([
@@ -71,6 +75,23 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => $e->getMessage(),
                     'errors' => $e->errors(),
                 ], $e->status);
+            }
+        });
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            if ($request->is('v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 400);
+            }
+        });
+
+        $exceptions->render(function (AuthorizationException $e, Request $request) {
+            if ($request->is('v1/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ], 401);
             }
         });
     })->create();

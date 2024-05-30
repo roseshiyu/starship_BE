@@ -17,17 +17,6 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $categories = Category::cases();
-        $data = [];
-        foreach ($categories as $category) {
-            $data[] = [
-                'id' => $category->value,
-                'name' => $category->name,
-            ];
-        }
-
-        return response()->data($data);
-        dd(1);
         $params = request()->all();
 
         return response()->data(CourseResource::collection(GetCourses::run($params)));
@@ -71,5 +60,22 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function category_index()
+    {
+        $categories = Category::cases();
+        $data = [];
+        foreach ($categories as $category) {
+            $data[] = [
+                'id' => $category->value,
+                'name' => $category->name,
+            ];
+        }
+
+        return response()->data($data);
     }
 }

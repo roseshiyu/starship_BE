@@ -43,4 +43,14 @@ class Teacher extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function isAdmin()
+    {
+        return false;
+    }
+
+    public function isStudent()
+    {
+        return false;
+    }
 }

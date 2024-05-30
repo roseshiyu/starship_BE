@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Auth\LoginAdmin;
 use App\Actions\Auth\RegisterUser;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\StoreAuthRequest;
 use App\Http\Requests\UpdateAuthRequest;
@@ -21,9 +23,15 @@ class AuthController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function login(LoginRequest $request)
     {
-        return request()->user();
+        if ($request->route()->getName() == 'admin.login') {
+            $res = LoginAdmin::run($request->validated());
+        } else {
+            return false;
+        }
+
+        return response()->data($res);
     }
 
     /**
