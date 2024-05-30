@@ -45,10 +45,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
+        $middleware->api([
+            'accept-json',
+        ]);
         $middleware->alias([
             'ability' => CheckForAnyAbility::class,
+            'accept-json' => \App\Http\Middleware\SetRequestAcceptJson::class,
         ]);
-        //
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Domain::get();
