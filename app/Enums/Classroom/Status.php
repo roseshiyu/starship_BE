@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\Course;
+namespace App\Enums\Classroom;
 
 enum Status: int
 {

@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('description', '1000');
             $table->string('code', '50')->unique();
-            $table->tinyText('course_subject_ids');
+            $table->string('subject_ids', '1000');
             $table->text('details')->nullable();
             $table->unsignedTinyInteger('status');
-            $table->unsignedTinyInteger('category_id'); // category_id, cat...
+            $table->unsignedTinyInteger('category_id'); // category_id
             $table->timestamps();
             $table->softDeletes();
         });

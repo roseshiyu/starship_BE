@@ -2,9 +2,8 @@
 
 namespace App\Enums\Course;
 
-enum Status: int
+enum SubjectStatus: int
 {
     case inactive = 0;
     case active = 1;
-    case rejected = 2;
 }

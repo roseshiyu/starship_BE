@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedInteger('course_id');
             $table->string('entry_requirement_proof', 2048)->nullable();
             $table->unsignedTinyInteger('status');
-            $table->unsignedInteger('admin_id');
+            $table->unsignedInteger('enrolled_admin_id')->nullable(); // create
+            $table->unsignedInteger('verified_admin_id')->nullable(); // 2-layer update
+            $table->string('remarks', 1024)->nullable();
             $table->timestamps();
         });
     }
